@@ -2,20 +2,20 @@
 #define __PL_PARSE_H__
 
 void match(int);
-void parse();
-void prog();
-void block();
-void condecl();
-void _const();
-void vardecl();
-void proc();
-void body();
-void statement();
-void lexp();
-void exp();
-void term();
-void factor();
-void lop();
+ast parse();
+ast prog();
+ast block();
+ast condecl();
+ast _const();
+ast vardecl();
+ast proc();
+ast body();
+ast statement();
+ast lexp();
+ast exp();
+ast term();
+ast factor();
+ast lop();
 
 void match(int tok_type)
 {
@@ -39,240 +39,413 @@ void match(int tok_type)
 	return;
 }
 
-void parse()
+ast parse()
 {
 	next();
-	prog();
-	return;
+	ast root;
+	root.setline(line);
+	root.settype(ast_root);
+	root.addchild(prog());
+	return root;
 }
 
-void prog()
+ast prog()
 {
 	match(tok_program);
+	ast node;
+	node.setline(line);
+	node.settype(ast_prog);
+	node.setstr(token.content);
 	match(tok_identifier);
 	match(tok_semi);
-	block();
-	return;
+	node.addchild(block());
+	return node;
 }
 
-void block()
+ast block()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_block);
 	if(token.tok_type==tok_const)
-		condecl();
+		node.addchild(condecl());
 	if(token.tok_type==tok_var)
-		vardecl();
+		node.addchild(vardecl());
 	if(token.tok_type==tok_procedure)
-		proc();
-	body();
-	return;
+		node.addchild(proc());
+	node.addchild(body());
+	return node;
 }
 
-void condecl()
+ast condecl()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_condecl);
 	match(tok_const);
-	_const();
+	node.addchild(_const());
 	while(token.tok_type==tok_comma)
 	{
 		match(tok_comma);
-		_const();
+		node.addchild(_const());
 	}
 	match(tok_semi);
-	return;
+	return node;
 }
 
-void _const()
+ast _const()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_id);
+	node.setstr(token.content);
+	
 	match(tok_identifier);
 	match(tok_assign);
+	
+	ast num;
+	num.setline(line);
+	num.settype(ast_number);
+	num.setstr(token.content);
+	node.addchild(num);
+	
 	match(tok_number);
-	return;
+	return node;
 }
 
-void vardecl()
+ast vardecl()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_vardecl);
+	
 	match(tok_var);
+	
+	ast id;
+	id.setline(line);
+	id.settype(ast_id);
+	id.setstr(token.content);
+	node.addchild(id);
+	
 	match(tok_identifier);
 	while(token.tok_type==tok_comma)
 	{
 		match(tok_comma);
+		
+		ast id;
+		id.setline(line);
+		id.settype(ast_id);
+		id.setstr(token.content);
+		node.addchild(id);
+		
 		match(tok_identifier);
 	}
 	match(tok_semi);
-	return;
+	return node;
 }
 
-void proc()
+ast proc()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_proc);
+	
 	match(tok_procedure);
+	
+	node.setstr(token.content);
+	
 	match(tok_identifier);
+	
+	ast para;
+	para.setline(line);
+	para.settype(ast_parameter);
+	
 	match(tok_lcurve);
 	if(token.tok_type==tok_identifier)
 	{
+		ast id;
+		id.setline(line);
+		id.settype(ast_id);
+		id.setstr(token.content);
+		para.addchild(id);
+		
 		match(tok_identifier);
 		while(token.tok_type==tok_comma)
 		{
 			match(tok_comma);
+			
+			ast id;
+			id.setline(line);
+			id.settype(ast_id);
+			id.setstr(token.content);
+			para.addchild(id);
+			
 			match(tok_identifier);
 		}
 	}
+	
+	node.addchild(para);
 	match(tok_rcurve);
 	match(tok_semi);
-	block();
+	
+	node.addchild(block());
 	while(token.tok_type==tok_semi)
 	{
 		match(tok_semi);
-		proc();
+		node.addchild(proc());
 	}
-	return;
+	return node;
 }
 
-void body()
+ast body()
 {
+	ast node;
+	node.setline(line);
+	node.settype(ast_block);
+	
 	match(tok_begin);
-	statement();
+	node.addchild(statement());
 	while(token.tok_type==tok_semi)
 	{
 		match(tok_semi);
-		statement();
+		node.addchild(statement());
 	}
 	match(tok_end);
-	return;
+	return node;
 }
 
-void statement()
+ast statement()
 {
+	ast node;
+	node.setline(line);
 	if(token.tok_type==tok_identifier)
 	{
+		node.settype(ast_assign);
+		node.setstr(token.content);
+		
 		match(tok_identifier);
 		match(tok_assign);
-		exp();
+		node.addchild(exp());
 	}
 	else if(token.tok_type==tok_if)
 	{
+		node.settype(ast_condition);
+		
+		ast _if;
+		_if.setline(line);
+		_if.settype(ast_if);
 		match(tok_if);
-		lexp();
+		_if.addchild(lexp());
 		match(tok_then);
-		statement();
+		_if.addchild(statement());
+		node.addchild(_if);
 		if(token.tok_type==tok_else)
 		{
+			ast _else;
+			_else.setline(line);
+			_else.settype(ast_else);
 			match(tok_else);
-			statement();
+			_else.addchild(statement());
+			node.addchild(_else);
 		}
 	}
 	else if(token.tok_type==tok_while)
 	{
+		node.settype(ast_while);
 		match(tok_while);
-		lexp();
+		node.addchild(lexp());
 		match(tok_do);
-		statement();
+		node.addchild(statement());
 	}
 	else if(token.tok_type==tok_call)
 	{
+		node.settype(ast_call);
+		
 		match(tok_call);
+		node.setstr(token.content);
+		
 		match(tok_identifier);
 		match(tok_lcurve);
 		if(token.tok_type!=tok_rcurve)
 		{
-			exp();
+			node.addchild(exp());
 			while(token.tok_type==tok_comma)
 			{
 				match(tok_comma);
-				exp();
+				node.addchild(exp());
 			}
 		}
 		match(tok_rcurve);
 	}
 	else if(token.tok_type==tok_begin)
-		body();
+		node=body();
 	else if(token.tok_type==tok_read)
 	{
+		node.settype(ast_read);
+		
 		match(tok_read);
 		match(tok_lcurve);
+		
+		ast id;
+		id.setline(line);
+		id.settype(ast_id);
+		id.setstr(token.content);
+		node.addchild(id);
+		
 		match(tok_identifier);
 		while(token.tok_type==tok_comma)
 		{
 			match(tok_comma);
+			
+			id.setline(line);
+			id.settype(ast_id);
+			id.setstr(token.content);
+			node.addchild(id);
+		
 			match(tok_identifier);
 		}
 		match(tok_rcurve);
 	}
 	else if(token.tok_type==tok_write)
 	{
+		node.settype(ast_write);
+		
 		match(tok_write);
 		match(tok_lcurve);
-		exp();
+		node.addchild(exp());
 		while(token.tok_type==tok_comma)
 		{
 			match(tok_comma);
-			exp();
+			node.addchild(exp());
 		}
 		match(tok_rcurve);
 	}
-	return;
+	return node;
 }
 
-void lexp()
+ast lexp()
 {
+	ast node;
+	node.setline(line);
 	if(token.tok_type==tok_odd)
 	{
+		node.settype(ast_odd);
 		match(tok_odd);
-		exp();
+		node.addchild(exp());
 	}
 	else
 	{
-		exp();
-		lop();
-		exp();
+		ast tmp1,tmp2;
+		tmp1=exp();
+		node=lop();
+		tmp2=exp();
+		node.addchild(tmp1);
+		node.addchild(tmp2);
 	}
-	return;
+	return node;
 }
 
-void exp()
+ast exp()
 {
+	ast node;
+	node.setline(line);
+
 	if(token.tok_type==tok_add || token.tok_type==tok_sub)
+	{
+		if(token.tok_type==tok_add)
+			node.settype(ast_add);
+		else
+			node.settype(ast_sub);
 		match(token.tok_type);
-	term();
+	}
+	if(node.gettype()!=ast_root)
+		node.addchild(term());
+	else
+		node=term();
 	while(token.tok_type==tok_add || token.tok_type==tok_sub)
 	{
+		ast tmp;
+		tmp.setline(line);
+		if(token.tok_type==tok_add)
+			tmp.settype(ast_add);
+		else
+			tmp.settype(ast_sub);
+		tmp.addchild(node);
 		match(token.tok_type);
-		term();
+		tmp.addchild(term());
+		node=tmp;
 	}
-	return;
+	return node;
 }
 
-void term()
+ast term()
 {
-	factor();
+	ast node;
+	node=factor();
 	while(token.tok_type==tok_mul || token.tok_type==tok_div)
 	{
+		ast tmp;
+		tmp.setline(line);
+		if(token.tok_type==tok_mul)
+			tmp.settype(ast_mul);
+		else
+			tmp.settype(ast_div);
+		tmp.addchild(node);
 		match(token.tok_type);
-		factor();
+		tmp.addchild(factor());
+		node=tmp;
 	}
-	return;
+	return node;
 }
 
-void factor()
+ast factor()
 {
+	ast node;
 	if(token.tok_type==tok_identifier)
+	{
+		node.setline(line);
+		node.settype(ast_id);
+		node.setstr(token.content);
 		match(tok_identifier);
+	}
 	else if(token.tok_type==tok_number)
+	{
+		node.setline(line);
+		node.settype(ast_number);
+		node.setstr(token.content);
 		match(tok_number);
+	}
 	else if(token.tok_type==tok_lcurve)
 	{
 		match(tok_lcurve);
-		exp();
+		node=exp();
 		match(tok_rcurve);
 	}
-	return;
+	return node;
 }
 
-void lop()
+ast lop()
 {
+	ast node;
+	node.setline(line);
 	if(token.tok_type==tok_equal || token.tok_type==tok_neq || token.tok_type==tok_less || token.tok_type==tok_leq || token.tok_type==tok_great || token.tok_type==tok_geq)
+	{
+		int atype;
+		switch(token.tok_type)
+		{
+			case tok_equal:atype=ast_eq;break;
+			case tok_neq:atype=ast_neq;break;
+			case tok_less:atype=ast_less;break;
+			case tok_leq:atype=ast_leq;break;
+			case tok_great:atype=ast_great;break;
+			case tok_geq:atype=ast_geq;break;
+		}
+		node.settype(atype);
 		match(token.tok_type);
+	}
 	else
 		die("["+line_code+"] expect compare operator.",line,line_code.length());
-	return;
+	return node;
 }
 
 #endif

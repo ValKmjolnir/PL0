@@ -7,7 +7,7 @@ int main()
 	std::ofstream fout("lex_info.txt");
 	if(!read_success)
 		exit(-1);
-	parse();
+	parse().print();
 	while(token.tok_type!=tok_eof)
 	{
 		next();
