@@ -170,9 +170,9 @@ void ast::print(int depth=0)
 {
 	std::string s="";
 	for(int i=0;i<depth;++i)
-		s+="| ";
+		s+="|  ";
 	std::cout<<s<<ast_table[type].ast_content;
-	if(type==ast_id || type==ast_number || type==ast_prog || type==ast_proc || type==ast_call)
+	if(type==ast_id || type==ast_number || type==ast_prog || type==ast_proc || type==ast_call || type==ast_assign)
 		std::cout<<": "<<content;
 	std::cout<<"\n";
 	for(std::vector<ast>::iterator i=child.begin();i!=child.end();++i)

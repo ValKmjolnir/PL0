@@ -32,38 +32,38 @@ struct
 	const char* content;
 	int type;
 }token_table[]={
-	{"begin",tok_begin},
-	{"end",tok_end},
-	{"odd",tok_odd},
-	{"program",tok_program},
-	{"const",tok_const},
-	{"var",tok_var},
-	{"procedure",tok_procedure},
-	{"if",tok_if},
-	{"then",tok_then},
-	{"else",tok_else},
-	{"while",tok_while},
-	{"do",tok_do},
-	{"call",tok_call},
-	{"read",tok_read},
-	{"write",tok_write},
-	{"program",tok_program},
-	{",",tok_comma},
-	{";",tok_semi},
-	{"(",tok_lcurve},
-	{")",tok_rcurve},
-	{":=",tok_assign},
-	{"+",tok_add},
-	{"-",tok_sub},
-	{"*",tok_mul},
-	{"/",tok_div},
-	{"=",tok_equal},
-	{"<>",tok_neq},
-	{"<",tok_less},
-	{"<=",tok_leq},
-	{">",tok_great},
-	{">=",tok_geq},
-	{NULL,-1},
+	{"begin",     tok_begin},
+	{"end",       tok_end},
+	{"odd",       tok_odd},
+	{"program",   tok_program},
+	{"const",     tok_const},
+	{"var",       tok_var},
+	{"procedure", tok_procedure},
+	{"if",        tok_if},
+	{"then",      tok_then},
+	{"else",      tok_else},
+	{"while",     tok_while},
+	{"do",        tok_do},
+	{"call",      tok_call},
+	{"read",      tok_read},
+	{"write",     tok_write},
+	{"program",   tok_program},
+	{",",         tok_comma},
+	{";",         tok_semi},
+	{"(",         tok_lcurve},
+	{")",         tok_rcurve},
+	{":=",        tok_assign},
+	{"+",         tok_add},
+	{"-",         tok_sub},
+	{"*",         tok_mul},
+	{"/",         tok_div},
+	{"=",         tok_equal},
+	{"<>",        tok_neq},
+	{"<",         tok_less},
+	{"<=",        tok_leq},
+	{">",         tok_great},
+	{">=",        tok_geq},
+	{NULL,        -1},
 };
 
 std::ifstream file_handle;
@@ -80,6 +80,7 @@ struct
 
 void init()
 {
+	compile_error=false;
 	line_code="";
 	line=1;
 	col=0;

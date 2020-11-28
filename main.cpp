@@ -1,20 +1,18 @@
 #include "pl.h"
 
-int main()
+int main(int argc,char* argv[])
 {
-	init();
-	bool read_success=read_file("example.txt");
-	std::ofstream fout("lex_info.txt");
-	if(!read_success)
-		exit(-1);
-	parse().print();
-	while(token.tok_type!=tok_eof)
+	if(argc!=2)
 	{
-		next();
-		if(token.tok_type!=tok_eof)
-			fout<<"("<<token.content<<" | "<<token.tok_type<<")\n";
+		std::cout<<"fatal error: no input file.\n";
+		exit(0);
 	}
+	init();
+	if(!read_file(argv[1]))
+		exit(-1);
+	ast result=parse();
+	if(!compile_error)
+		result.print();
 	close_file();
-	fout.close();
 	return 0;
 }

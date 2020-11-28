@@ -8,7 +8,7 @@ ast block();
 ast condecl();
 ast _const();
 ast vardecl();
-ast proc();
+void proc(ast&);
 ast body();
 ast statement();
 ast lexp();
@@ -34,6 +34,13 @@ void match(int tok_type)
 					break;
 				}
 		die("["+line_code+"] expect token \""+expect+"\".",line,line_code.length());
+		// panic mode: if type does not match,get the next token until its type matches
+		while(token.tok_type!=tok_type)
+		{
+			next();
+			if(token.tok_type==tok_eof)
+				break;
+		}
 	}
 	next();
 	return;
@@ -72,7 +79,7 @@ ast block()
 	if(token.tok_type==tok_var)
 		node.addchild(vardecl());
 	if(token.tok_type==tok_procedure)
-		node.addchild(proc());
+		proc(node);
 	node.addchild(body());
 	return node;
 }
@@ -144,7 +151,10 @@ ast vardecl()
 	return node;
 }
 
-ast proc()
+// <proc> -> procedure <id> ([<id>{,<id>}]);<block>{;<proc>}
+// get reference of root to add proc as it's children
+// proc node cannot get proc node as it's children,it is awful
+void proc(ast& root)
 {
 	ast node;
 	node.setline(line);
@@ -189,12 +199,13 @@ ast proc()
 	match(tok_semi);
 	
 	node.addchild(block());
+	root.addchild(node);
 	while(token.tok_type==tok_semi)
 	{
 		match(tok_semi);
-		node.addchild(proc());
+		proc(root);
 	}
-	return node;
+	return;
 }
 
 ast body()
@@ -320,6 +331,10 @@ ast statement()
 		}
 		match(tok_rcurve);
 	}
+	else
+		die("["+line_code+"] expect a statement after \";\".",line,line_code.length());
+	// if this terminal symbol is not in the FIRST set of <statement>
+	// then print error to get a correct statement
 	return node;
 }
 
@@ -352,10 +367,7 @@ ast exp()
 
 	if(token.tok_type==tok_add || token.tok_type==tok_sub)
 	{
-		if(token.tok_type==tok_add)
-			node.settype(ast_add);
-		else
-			node.settype(ast_sub);
+		node.settype(token.tok_type==tok_add? ast_add:ast_sub);
 		match(token.tok_type);
 	}
 	if(node.gettype()!=ast_root)
@@ -366,10 +378,7 @@ ast exp()
 	{
 		ast tmp;
 		tmp.setline(line);
-		if(token.tok_type==tok_add)
-			tmp.settype(ast_add);
-		else
-			tmp.settype(ast_sub);
+		tmp.settype(token.tok_type==tok_add? ast_add:ast_sub);
 		tmp.addchild(node);
 		match(token.tok_type);
 		tmp.addchild(term());
@@ -386,10 +395,7 @@ ast term()
 	{
 		ast tmp;
 		tmp.setline(line);
-		if(token.tok_type==tok_mul)
-			tmp.settype(ast_mul);
-		else
-			tmp.settype(ast_div);
+		tmp.settype(token.tok_type==tok_mul?ast_mul:ast_div);
 		tmp.addchild(node);
 		match(token.tok_type);
 		tmp.addchild(factor());
@@ -421,6 +427,8 @@ ast factor()
 		node=exp();
 		match(tok_rcurve);
 	}
+	else
+		die("["+line_code+"] expect a factor here.",line,line_code.length());
 	return node;
 }
 
@@ -433,12 +441,12 @@ ast lop()
 		int atype;
 		switch(token.tok_type)
 		{
-			case tok_equal:atype=ast_eq;break;
-			case tok_neq:atype=ast_neq;break;
-			case tok_less:atype=ast_less;break;
-			case tok_leq:atype=ast_leq;break;
-			case tok_great:atype=ast_great;break;
-			case tok_geq:atype=ast_geq;break;
+			case tok_equal: atype=ast_eq;    break;
+			case tok_neq:   atype=ast_neq;   break;
+			case tok_less:  atype=ast_less;  break;
+			case tok_leq:   atype=ast_leq;   break;
+			case tok_great: atype=ast_great; break;
+			case tok_geq:   atype=ast_geq;   break;
 		}
 		node.settype(atype);
 		match(token.tok_type);

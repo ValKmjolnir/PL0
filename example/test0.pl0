@@ -1,0 +1,35 @@
+program id;
+
+const a:=1,b:=012345;
+var c,d,e,result;
+procedure mult(x,y);
+	begin
+		result:=x*y
+	end;
+procedure swap(x,y);
+	var tmp;
+	begin
+		tmp:=x;
+		x:=y;
+		y:=tmp
+	end
+begin
+	call func(2,4);
+	call func(c,d);
+	if odd c then
+		begin
+			c:=c+1
+		end
+	else
+		begin
+			c:=c+2/3
+		end;
+	while d<>0 do
+		begin
+			e:=e+1*8/2;
+			d:=d-1
+		end;
+	call func(1,2,3);
+	read(c,d);
+	write(1,2)
+end
