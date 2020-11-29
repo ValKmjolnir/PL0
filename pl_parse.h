@@ -338,7 +338,10 @@ ast statement()
 		match(tok_rcurve);
 	}
 	else
+	{ 
 		die("["+line_code+"] expect a statement after \";\".",line,line_code.length());
+		panic();
+	}
 	// if this terminal symbol is not in the FIRST set of <statement>
 	// then print error to get a correct statement
 	return node;
