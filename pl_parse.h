@@ -17,6 +17,17 @@ ast term();
 ast factor();
 ast lop();
 
+void panic()
+{
+	while(token.tok_type!=tok_semi && token.tok_type!=tok_begin && token.tok_type!=tok_end && token.tok_type!=tok_do && token.tok_type!=tok_then)
+	{
+		next();
+		if(token.tok_type==tok_eof)
+			break;
+	}
+	return;
+}
+
 void match(int tok_type)
 {
 	if(token.tok_type!=tok_type)
@@ -34,13 +45,8 @@ void match(int tok_type)
 					break;
 				}
 		die("["+line_code+"] expect token \""+expect+"\".",line,line_code.length());
-		// panic mode: if type does not match,get the next token until its type matches
-		while(token.tok_type!=tok_type)
-		{
-			next();
-			if(token.tok_type==tok_eof)
-				break;
-		}
+		// panic mode: if type does not match,get the next token until matches ';'
+		panic();
 	}
 	next();
 	return;
@@ -428,7 +434,10 @@ ast factor()
 		match(tok_rcurve);
 	}
 	else
+	{
 		die("["+line_code+"] expect a factor here.",line,line_code.length());
+		panic();
+	}
 	return node;
 }
 
@@ -452,7 +461,10 @@ ast lop()
 		match(token.tok_type);
 	}
 	else
+	{
 		die("["+line_code+"] expect compare operator.",line,line_code.length());
+		panic();
+	}
 	return node;
 }
 
