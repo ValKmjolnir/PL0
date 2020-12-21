@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <list>
 #include <vector>
 #include <map>
 
@@ -19,6 +20,8 @@ void die(std::string error_info,int line=-1,int column=-1)
 }
 #include "pl_lex.h"
 #include "pl_ast.h"
+#include "pl_code.h"
 #include "pl_parse.h"
+#include "pl_vm.h"
 
 #endif
