@@ -82,7 +82,7 @@ private:
 	std::string content;
 	std::vector<ast> child;
 public:
-	ast();
+	ast(int,int,std::string);
 	ast(const ast&);
 	~ast();
 	void addchild(ast);
@@ -97,10 +97,11 @@ public:
 	void print(int);
 };
 
-ast::ast()
+ast::ast(int default_line=0,int default_type=ast_root,std::string default_content="")
 {
-	line=0;
-	type=0;
+	line=default_line;
+	type=default_type;
+	content=default_content;
 	return;
 }
 

@@ -66,12 +66,6 @@ struct
 	{NULL,        -1},
 };
 
-std::ifstream file_handle;
-std::string line_code;
-int line;
-int col;
-char c;
-
 struct
 {
 	std::string content;
@@ -115,12 +109,8 @@ void next()
 		return;
 	}
 	if(c) line_code+=c;
-	bool unknown_char=false;
 	if(c!='\n' && c!='\r' && c!='\t' && c!=' ' && !IS_DIGIT(c) && !IS_ID(c) && !IS_OPR(c) && !IS_MOPR(c))
-	{
-		if(!col) col=line_code.length();
-		unknown_char=true;
-	}
+		die("["+line_code+"] unknown character.");
 	while(!file_handle.eof() && !IS_DIGIT(c) && !IS_ID(c) && !IS_OPR(c) && !IS_MOPR(c))
 	{
 		c=file_handle.get();
@@ -135,25 +125,11 @@ void next()
 			break;
 		else if(c=='\n')
 		{
-			if(unknown_char)
-			{
-				die("["+line_code+"] unknown character.",line,col);
-				unknown_char=false;
-				col=0;
-			}
 			++line;
 			line_code="";
 		}
 		else if(c!='\r' && c!='\t' && c!=' ')
-		{
-			if(!col) col=line_code.length();
-			unknown_char=true;
-		}
-	}
-	if(unknown_char)
-	{
-		die("["+line_code+"] unknown character.",line,col);
-		col=0;
+			die("["+line_code+"] unknown character.");
 	}
 	if(IS_DIGIT(c))
 	{
@@ -181,7 +157,7 @@ void next()
 		}
 		token.tok_type=tok_number;
 		if(error_number)
-			die("["+line_code+"] error number.",line,col);
+			die("["+line_code+"] error number.");//,line,col);
 		col=0;
 	}
 	else if(IS_ID(c))
@@ -249,7 +225,7 @@ void next()
 				break;
 			}
 		if(token.tok_type<0)
-			die("["+line_code+"] incorrect operator.",line,line_code.length());
+			die("["+line_code+"] incorrect operator.");
 	}
 	return;
 }

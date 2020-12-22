@@ -8,14 +8,18 @@
 #include <vector>
 #include <map>
 
+std::ifstream file_handle;
+std::string line_code;
+int line;
+int col;
+char c;
+
 bool compile_error;
-void die(std::string error_info,int line=-1,int column=-1)
+void die(std::string error_info,int l=-1)
 {
 	compile_error=true;
-	if(line>=0 && column>=0)
-		std::cout<<"line "<<line<<",column "<<column<<":"<<error_info<<'\n';
-	else
-		std::cout<<error_info<<'\n';
+	if(l<0) std::cout<<"line "<<line<<",column "<<line_code.length()<<":"<<error_info<<'\n';
+	else    std::cout<<"line "<<l<<":"<<error_info<<'\n';
 	return;
 }
 #include "pl_lex.h"
