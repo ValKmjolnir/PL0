@@ -1,0 +1,11 @@
+program id;
+var a;
+procedure m(x);
+begin
+    write(x);
+    if x<5 then
+        call m(x+1)
+end
+begin
+    call m(0)
+end

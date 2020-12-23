@@ -1,0 +1,20 @@
+program hello;
+const link:=114514;
+var m,n,tmp;
+procedure print(x);
+begin
+    write(x)
+end
+begin
+    read(m,n);
+    begin
+        tmp:=m;
+        m:=n;
+        n:=tmp
+    end;
+    while m<n do
+    begin
+        write(m);
+        m:=m+1
+    end
+end

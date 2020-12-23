@@ -14,8 +14,8 @@ procedure swap(x,y);
 		y:=tmp
 	end
 begin
-	call func(2,4);
-	call func(c,d);
+	call mult(2,1*3);
+	call swap(c,d/4);
 	if odd c then
 		begin
 			c:=c+1
@@ -24,12 +24,11 @@ begin
 		begin
 			c:=c+2/3
 		end;
-	while d<>0 do
+	while d<>c*11 do
 		begin
-			e:=e+1*8/2;
+			e:=e+1*8/2*3;
 			d:=d-1
 		end;
-	call func(1,2,3);
 	read(c,d);
 	write(1,2)
 end
