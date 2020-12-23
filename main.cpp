@@ -17,9 +17,7 @@ int main(int argc,char* argv[])
 		result.print();
 		for(int i=0;i<exec_code.size();++i)
         	printf("0x%.8x %s 0x%.8x 0x%.8x\n",i,opcode_name[exec_code[i].opcode],exec_code[i].level,exec_code[i].opnum);
-		vm_init();
-		//vm_run();
-		vm_exit();
+		vm_run();
 	}
 	return 0;
 }

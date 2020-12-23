@@ -105,9 +105,13 @@ int get_symbol_place(std::string symbol_name)
     for(std::list<std::vector<symbol> >::iterator i=symbol_table.begin();i!=symbol_table.end();++i)
     {
         int size=i->size();
+        int cnt=0;
         for(int j=0;j<size;++j)
+        {
+            if((*i)[j].type==sym_var)++cnt;
             if((*i)[j].name==symbol_name)
-                return ((level<<16)+j);
+                return ((level<<16)+cnt-1);
+        }
         ++level;
     }
     die("undefined symbol: "+symbol_name);

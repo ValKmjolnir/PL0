@@ -4,7 +4,7 @@
 void match(int);
 ast parse();
 ast prog();
-ast block(ast);
+ast block(int);
 ast condecl();
 ast _const();
 ast vardecl();
@@ -68,15 +68,13 @@ ast prog()
 	match(tok_semi);
 	add_scope();
 
-	ast nullnode(0,0);
-	node.addchild(block(nullnode));
+	node.addchild(block(0));
 	del_scope();
 	return node;
 }
 
-ast block(ast para)
+ast block(int var_size)
 {
-	int var_size=para.getchild().size();
 	ast node(line,ast_block);
 	if(token.tok_type==tok_const)
 		node.addchild(condecl());
@@ -91,11 +89,6 @@ ast block(ast para)
 		proc(node);
 	exec_code[entry_label].opnum=exec_code.size();
 	emit(op_int,0,var_size);
-	for(int i=para.getchild().size()-1;i>=0;--i)
-	{
-		int data=get_symbol_place(para.getchild()[i].getstr());
-		emit(op_sto,data>>16,data&0xffff);
-	}
 	node.addchild(body());
 	return node;
 }
@@ -198,7 +191,7 @@ void proc(ast& root)
 	match(tok_rcurve);
 	match(tok_semi);
 	
-	node.addchild(block(para));
+	node.addchild(block(para.getchild().size()));
 	root.addchild(node);
 	emit(op_opr,0,calc_ret);
 	del_scope();

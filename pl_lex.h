@@ -77,7 +77,6 @@ void init()
 	compile_error=false;
 	line_code="";
 	line=1;
-	col=0;
 	return;
 }
 
@@ -87,7 +86,7 @@ bool read_file(std::string filename)
 	if(file_handle.fail())
 	{
 		file_handle.close();
-		die("cannot open file \""+filename+"\".");
+		std::cout<<("cannot open file \""+filename+"\".\n");
 		return false;
 	}
 	c=file_handle.get();
@@ -149,16 +148,13 @@ void next()
 			{
 				line_code+=c;
 				error_number=true;
-				if(!col)
-					col=line_code.length();
 			}
 			else
 				break;
 		}
 		token.tok_type=tok_number;
 		if(error_number)
-			die("["+line_code+"] error number.");//,line,col);
-		col=0;
+			die("["+line_code+"] error number.");
 	}
 	else if(IS_ID(c))
 	{

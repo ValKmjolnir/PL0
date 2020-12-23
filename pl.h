@@ -11,7 +11,6 @@
 std::ifstream file_handle;
 std::string line_code;
 int line;
-int col;
 char c;
 
 bool compile_error;
