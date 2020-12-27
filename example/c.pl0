@@ -1,5 +1,5 @@
 program hello;
-const link:=114514;
+const link:=65535;
 var m,n,tmp;
 procedure print(x);
 begin
@@ -7,6 +7,7 @@ begin
 end
 begin
     read(m,n);
+    if m>n then
     begin
         tmp:=m;
         m:=n;
@@ -14,7 +15,7 @@ begin
     end;
     while m<n do
     begin
-        write(m);
+        call print(m);
         m:=m+1
     end
 end

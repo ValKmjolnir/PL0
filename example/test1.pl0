@@ -1,38 +1,29 @@
 program test;
-
-const num0:=114514,num1:=1919810;
-var x,y,t,loop;
-procedure swap();
-    begin
-        t:=x;
-        x:=y;
-        y:=t
-    end;
-procedure add();
-    begin
-        x:=x+y
-    end;
-procedure sub();
-    begin
-        x:=x-y
-    end
+const num0:=0,num1:=1;
+var x,y,loop,result;
+procedure add(x,y);
+begin
+    result:=x+y
+end;
+procedure sub(x,y);
+begin
+    result:=x-y
+end
 begin
     read(x,y);
     loop:=10;
     while loop>0 do
-        begin
-            call swap();
-            call add();
-            call sub();
-            loop:=loop-1
-        end;
-    if odd x then
-        begin
-            write(0)
+    begin
+        if odd x then begin
+            write(num0);
+            call add(x,y);
+            write(result)
         end
-    else
-        begin
-            write(1)
+        else begin
+            write(num1);
+            call sub(x,y);
+            write(result)
         end;
-    write(-x+y*x-x*x/y)
+        x:=x+1;y:=y-1;loop:=loop-1
+    end
 end

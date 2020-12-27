@@ -1,11 +1,26 @@
 program id;
-var a;
-procedure m(x);
+    var a;
+    procedure k0(x);
+        procedure k1(x);
+            procedure k2(x);
+                procedure k3(x);
+                begin
+                    read(a);
+                    write(a*10+x)
+                end
+            begin
+                write(x+1);
+                call k3(x+1)
+            end
+        begin
+            write(x+1);
+            call k2(x+1)
+        end
+    begin
+        write(x+1);
+        call k1(x+1)
+    end
 begin
-    write(x);
-    if x<5 then
-        call m(x+1)
-end
-begin
-    call m(0)
+    read(a);
+    call k0(a+1-1)
 end

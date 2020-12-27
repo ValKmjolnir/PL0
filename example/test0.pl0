@@ -1,34 +1,18 @@
 program id;
-
-const a:=1,b:=012345;
-var c,d,e,result;
-procedure mult(x,y);
-	begin
-		result:=x*y
-	end;
-procedure swap(x,y);
-	var tmp;
-	begin
-		tmp:=x;
-		x:=y;
-		y:=tmp
-	end
+var t;
+procedure narcissistic(x);
+var h3,h2,h1;
 begin
-	call mult(2,1*3);
-	call swap(c,d/4);
-	if odd c then
-		begin
-			c:=c+1
-		end
-	else
-		begin
-			c:=c+2/3
-		end;
-	while d<>c*11 do
-		begin
-			e:=e+1*8/2*3;
-			d:=d-1
-		end;
-	read(c,d);
-	write(1,2)
+	h3:=x/100;
+	h2:=x/10-(x/100)*10;
+	h1:=x-(x/10)*10;
+	if h3*h3*h3+h2*h2*h2+h1*h1*h1=x then
+		write(x)
+end
+begin
+	t:=100;
+	while t<1000 do begin
+		call narcissistic(t);
+		t:=t+1
+	end
 end

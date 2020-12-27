@@ -91,6 +91,7 @@ void opr_cal()
     // after int,this space is the value space
     for(int i=vm_stack_top;i>stack_alloc_boundary;--i)
         vm_stack[i+2+vm_stack_top-stack_alloc_boundary]=vm_stack[i];
+    
     int stc_lnk=static_link;
     int level=exec_code[ptr].level;
     for(int i=0;i<level;++i)
@@ -151,14 +152,14 @@ void debug()
     for(int i=vm_stack_top;i>vm_stack_top-4 && i>=0;--i)
         printf("0x%.8x 0x%.8x (%d)\n",i,vm_stack[i],vm_stack[i]);
     printf("-------------------------------------\n");
+    system("pause");
     return;
 }
 
 void (*func_ptr[])()={&opr_nop,&opr_lit,&opr_opr,&opr_lod,&opr_sto,&opr_cal,&opr_int,&opr_jmp,&opr_jpc,&opr_red,&opr_wrt};
 
-void vm_run()
+void vm_init()
 {
-    vm_stack=new int[8192];
     vm_stack[0]=0;// static link
     vm_stack[1]=1;// dynamic link
     vm_stack[2]=0x7fffffff;// return address
@@ -168,11 +169,29 @@ void vm_run()
     return_addr=2;
     ptr=0;
     stack_alloc_boundary=0;
+    return;
+}
+
+void vm_run()
+{
+    vm_stack=new int[8192];
+    vm_init();
+    int size=exec_code.size();
+    for(;ptr<size;++ptr)
+        func_ptr[exec_code[ptr].opcode]();
+    delete []vm_stack;
+    return;
+}
+
+void vm_debug()
+{
+    vm_stack=new int[8192];
+    vm_init();
     int size=exec_code.size();
     for(;ptr<size;++ptr)
     {
-        //debug();
-        func_ptr[exec_code[ptr].opcode](); 
+        debug();
+        func_ptr[exec_code[ptr].opcode]();
     }
     delete []vm_stack;
     return;

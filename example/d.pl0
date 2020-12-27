@@ -1,0 +1,14 @@
+program stackoverflow;
+procedure overflow(x);
+begin
+    if x<1700 then
+    begin
+        write(x,x*x);
+        call overflow(x+1)
+    end
+    else
+        write(-2147483648)
+end
+begin
+    call overflow(1)
+end

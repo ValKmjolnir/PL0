@@ -1,6 +1,8 @@
 #ifndef __PL_H__
 #define __PL_H__
 
+#pragma GCC optimize(2)
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
