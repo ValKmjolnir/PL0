@@ -152,7 +152,10 @@ void debug()
     for(int i=vm_stack_top;i>vm_stack_top-4 && i>=0;--i)
         printf("0x%.8x 0x%.8x (%d)\n",i,vm_stack[i],vm_stack[i]);
     printf("-------------------------------------\n");
-    system("pause");
+    printf("press enter to continue...\n");
+
+    std::string temp;
+    std::getline(std::cin,temp);
     return;
 }
 

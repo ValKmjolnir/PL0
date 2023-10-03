@@ -1,0 +1,19 @@
+program neqtest;
+var iter;
+procedure neq(x);
+begin
+    if x<>10 then
+    begin
+        write(1)
+    end
+    else
+        write(0)
+end
+begin
+    iter:=0;
+    while iter<=20 do
+    begin
+        call neq(iter);
+        iter:=iter+1
+    end
+end

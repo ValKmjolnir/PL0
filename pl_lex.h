@@ -6,6 +6,9 @@
 #define IS_OPR(c) ((c)=='+' || (c)=='-' || (c)=='*' || (c)=='/' || (c)=='=' || (c)==',' || (c)==';' || (c)=='(' || (c)==')')
 #define IS_MOPR(c) ((c)==':' || (c)=='<' || (c)=='>')
 
+#include <cstring>
+#include <sstream>
+
 enum token_type
 {
 	tok_begin,tok_end,
@@ -207,7 +210,7 @@ void next()
 			}
 			else if(c=='>' && token.content=="<")
 			{
-				token.content=="<>";
+				token.content="<>";
 				c=file_handle.get();
 			}
 			else
