@@ -1,6 +1,11 @@
 #ifndef __PL_CODE_H__
 #define __PL_CODE_H__
 
+#include <cstring>
+#include <sstream>
+#include <list>
+#include <vector>
+
 enum opcode_type          {op_nop,op_lit,op_opr,op_lod,op_sto,op_cal,op_int,op_jmp,op_jpc,op_red,op_wrt};
 const char* opcode_name[]={"nop" ,"lit" ,"opr" ,"lod" ,"sto" ,"cal" ,"int" ,"jmp" ,"jpc" ,"red" ,"wrt" ,NULL};
 enum opr_type{calc_ret,calc_nega,calc_plus,calc_minus,calc_mult,calc_div,calc_odd,calc_eq,calc_neq,calc_les,calc_leq,calc_grt,calc_geq};

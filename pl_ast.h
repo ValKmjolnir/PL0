@@ -1,6 +1,11 @@
 #ifndef __PL_AST_H__
 #define __PL_AST_H__
 
+#include <iostream>
+#include <cstring>
+#include <sstream>
+#include <vector>
+
 enum ast_type
 {
 	ast_root,
@@ -82,7 +87,7 @@ private:
 	std::string content;
 	std::vector<ast> child;
 public:
-	ast(int,int,std::string);
+	ast(int=0,int=ast_root,std::string="");
 	ast(const ast&);
 	~ast();
 	void addchild(ast);
@@ -97,7 +102,7 @@ public:
 	void print(int);
 };
 
-ast::ast(int default_line=0,int default_type=ast_root,std::string default_content="")
+ast::ast(int default_line,int default_type,std::string default_content)
 {
 	line=default_line;
 	type=default_type;
