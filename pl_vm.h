@@ -143,7 +143,7 @@ void opr_red()
 
 void opr_wrt()
 {
-    std::cout<<vm_stack[vm_stack_top--]<<'\n';
+    std::cout << vm_stack[vm_stack_top--] << '\n';
     return;
 }
 
