@@ -5,8 +5,7 @@
 #include <sstream>
 #include <vector>
 
-enum ast_type
-{
+enum ast_type {
 	ast_root,
 	ast_prog,
 	ast_block,
@@ -43,8 +42,7 @@ struct
 {
 	const char* ast_content;
 	int type;
-}ast_table[]=
-{
+} ast_table[] = {
 	{"root",         ast_root},
 	{"program",      ast_prog},
 	{"block",        ast_block},
@@ -75,7 +73,7 @@ struct
 	{"<=",           ast_leq},
 	{">",            ast_great},
 	{">=",           ast_geq},
-	{NULL,-1}
+	{nullptr,        -1}
 };
 
 class ast
@@ -98,7 +96,7 @@ public:
 	int gettype();
 	std::string getstr();
 	ast& operator=(const ast&);
-	void print(int);
+	void print(int) const;
 };
 
 ast::ast(int default_line,int default_type,std::string default_content)
@@ -130,33 +128,40 @@ void ast::addchild(ast tmp)
 	child.push_back(tmp);
 	return;
 }
+
 void ast::setline(int l)
 {
 	line=l;
 	return;
 }
+
 void ast::settype(int t)
 {
 	type=t;
 	return;
 }
+
 void ast::setstr(std::string& s)
 {
 	content=s;
 	return;
 }
+
 std::vector<ast>& ast::getchild()
 {
 	return child;
 }
+
 int ast::getline()
 {
 	return line;
 }
+
 int ast::gettype()
 {
 	return type;
 }
+
 std::string ast::getstr()
 {
 	return content;
@@ -171,16 +176,16 @@ ast& ast::operator=(const ast& tmp)
 	return *this;
 }
 
-void ast::print(int depth=0)
+void ast::print(int depth = 0) const
 {
-	std::string s="";
-	for(int i=0;i<depth;++i)
-		s+="| ";
-	std::cout<<s<<ast_table[type].ast_content;
-	if(type==ast_id || type==ast_number || type==ast_prog || type==ast_proc || type==ast_call || type==ast_assign)
-		std::cout<<": "<<content;
-	std::cout<<"\n";
-	for(std::vector<ast>::iterator i=child.begin();i!=child.end();++i)
-		i->print(depth+1);
+	std::string s = "";
+	for (int i = 0; i < depth; ++i)
+		s += "| ";
+	std::cout << s << ast_table[type].ast_content;
+	if (type==ast_id || type==ast_number || type==ast_prog || type==ast_proc || type==ast_call || type==ast_assign)
+		std::cout << ": " << content;
+	std::cout << "\n";
+	for (const auto& i : child)
+		i.print(depth + 1);
 	return;
 }

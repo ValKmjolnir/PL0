@@ -1,8 +1,8 @@
-program neqtest;
+program neq_test;
 var iter;
 procedure neq(x);
 begin
-    if x<>10 then
+    if x <> 5 then
     begin
         write(1)
     end
@@ -10,10 +10,10 @@ begin
         write(0)
 end
 begin
-    iter:=0;
-    while iter<=20 do
+    iter := 0;
+    while iter <= 10 do
     begin
         call neq(iter);
-        iter:=iter+1
+        iter := iter + 1
     end
 end

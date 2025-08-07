@@ -1,6 +1,9 @@
 #pragma once
 
-int* vm_stack;
+#include <iostream>
+#include <cstdlib>
+
+int vm_stack[8192];
 int vm_stack_top;
 int stack_alloc_boundary;
 int ptr;
@@ -148,13 +151,14 @@ void debug()
 {
     printf("debug--------------------------------\n");
     printf("0x%.8x %s 0x%.8x 0x%.8x\n",ptr,opcode_name[exec_code[ptr].opcode],exec_code[ptr].level,exec_code[ptr].opnum);
-    for(int i=vm_stack_top;i>vm_stack_top-4 && i>=0;--i)
+    printf("stack--------------------------------\n");
+    for(int i=vm_stack_top; i>vm_stack_top-4 && i>=0; --i)
         printf("0x%.8x 0x%.8x (%d)\n",i,vm_stack[i],vm_stack[i]);
     printf("-------------------------------------\n");
     printf("press enter to continue...\n");
 
     std::string temp;
-    std::getline(std::cin,temp);
+    std::getline(std::cin, temp);
     return;
 }
 
@@ -162,39 +166,46 @@ void (*func_ptr[])()={&opr_nop,&opr_lit,&opr_opr,&opr_lod,&opr_sto,&opr_cal,&opr
 
 void vm_init()
 {
-    vm_stack[0]=0;// static link
-    vm_stack[1]=1;// dynamic link
-    vm_stack[2]=0x7fffffff;// return address
-    vm_stack_top=2;
-    static_link=0;
-    dynamic_link=1;
-    return_addr=2;
-    ptr=0;
-    stack_alloc_boundary=0;
+    vm_stack[0] = 0;// static link
+    vm_stack[1] = 1;// dynamic link
+    vm_stack[2] = 0x7fffffff;// return address
+    vm_stack_top = 2;
+    static_link = 0;
+    dynamic_link = 1;
+    return_addr = 2;
+    ptr = 0;
+    stack_alloc_boundary = 0;
     return;
+}
+
+void stack_overflow_check() {
+    if (vm_stack_top >= 8100) {
+        std::cout << "stack overflow\n";
+        std::exit(-1);
+    }
 }
 
 void vm_run()
 {
-    vm_stack=new int[8192];
     vm_init();
     int size=exec_code.size();
     for(;ptr<size;++ptr)
+    {
         func_ptr[exec_code[ptr].opcode]();
-    delete []vm_stack;
+        stack_overflow_check();
+    }
     return;
 }
 
 void vm_debug()
 {
-    vm_stack=new int[8192];
     vm_init();
     int size=exec_code.size();
     for(;ptr<size;++ptr)
     {
         debug();
         func_ptr[exec_code[ptr].opcode]();
+        stack_overflow_check();
     }
-    delete []vm_stack;
     return;
 }

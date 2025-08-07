@@ -13,7 +13,7 @@ int line;
 char c;
 bool compile_error;
 
-void die(std::string error_info, int l = -1)
+void die(const std::string& error_info, int l = -1)
 {
 	compile_error = true;
 	if (l < 0) {
