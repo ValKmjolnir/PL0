@@ -1,5 +1,4 @@
-#ifndef __PL_VM_H__
-#define __PL_VM_H__
+#pragma once
 
 int* vm_stack;
 int vm_stack_top;
@@ -199,4 +198,3 @@ void vm_debug()
     delete []vm_stack;
     return;
 }
-#endif

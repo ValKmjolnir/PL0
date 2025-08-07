@@ -1,5 +1,4 @@
-#ifndef __PL_LEX_H__
-#define __PL_LEX_H__
+#pragma once
 
 #define IS_ID(c) (('a'<=(c) && (c)<='z') || ('A'<=(c) && (c)<='Z'))
 #define IS_DIGIT(c) ('0'<=(c) && (c)<='9')
@@ -11,22 +10,38 @@
 
 enum token_type
 {
-	tok_begin,tok_end,
+	tok_begin,
+	tok_end,
 	tok_odd,
-	tok_program,tok_const,tok_var,
+	tok_program,
+	tok_const,
+	tok_var,
 	tok_procedure,
-	tok_if,tok_then,tok_else,
-	tok_while,tok_do,
-	tok_call,tok_read,tok_write,
+	tok_if,
+	tok_then,
+	tok_else,
+	tok_while,
+	tok_do,
+	tok_call,
+	tok_read,
+	tok_write,
 	tok_identifier,
 	tok_number,
 	tok_assign,
-	tok_add,tok_sub,tok_mul,tok_div,
-	tok_equal,tok_neq,
-	tok_less,tok_leq,
-	tok_great,tok_geq,
-	tok_lcurve,tok_rcurve,
-	tok_semi,tok_comma,
+	tok_add,
+	tok_sub,
+	tok_mul,
+	tok_div,
+	tok_equal,
+	tok_neq,
+	tok_less,
+	tok_leq,
+	tok_great,
+	tok_geq,
+	tok_lcurve,
+	tok_rcurve,
+	tok_semi,
+	tok_comma,
 	tok_eof
 };
 
@@ -34,7 +49,7 @@ struct
 {
 	const char* content;
 	int type;
-}token_table[]={
+} token_table[] = {
 	{"begin",     tok_begin},
 	{"end",       tok_end},
 	{"odd",       tok_odd},
@@ -69,11 +84,11 @@ struct
 	{NULL,        -1},
 };
 
-struct
+struct token_info_t
 {
 	std::string content;
 	int tok_type;
-}token;
+} token;
 
 void init()
 {
@@ -228,7 +243,3 @@ void next()
 	}
 	return;
 }
-
-
-
-#endif

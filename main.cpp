@@ -1,8 +1,13 @@
 #include "pl.h"
+#include "pl_lex.h"
+#include "pl_ast.h"
+#include "pl_code.h"
+#include "pl_parse.h"
+#include "pl_vm.h"
 
 void version()
 {
-	std::cout<<"PL/0 compiler/interpreter ("<<__TIME__<<" "<<__DATE__<<")\n";
+	std::cout<<"PL/0 compiler ("<<__TIME__<<" "<<__DATE__<<")\n";
 }
 
 void help()

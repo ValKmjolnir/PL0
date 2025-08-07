@@ -1,5 +1,4 @@
-#ifndef __PL_PARSE_H__
-#define __PL_PARSE_H__
+#pragma once
 
 void match(int);
 ast parse();
@@ -523,5 +522,3 @@ ast lop()
 	}
 	return node;
 }
-
-#endif

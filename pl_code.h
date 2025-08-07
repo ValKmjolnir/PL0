@@ -1,5 +1,4 @@
-#ifndef __PL_CODE_H__
-#define __PL_CODE_H__
+#pragma once
 
 #include <cstring>
 #include <sstream>
@@ -162,4 +161,3 @@ void del_scope()
     symbol_table.pop_front();
     return;
 }
-#endif
