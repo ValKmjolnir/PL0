@@ -1,0 +1,55 @@
+name: PL0 Test
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/ci.yml
+      - *.h
+      - *.cpp
+      - makefile
+      - example/**
+  pull_request:
+    branches: [ main ]
+    paths:
+      - .github/workflows/ci.yml
+      - *.h
+      - *.cpp
+      - makefile
+      - example/**
+  workflow_dispatch:
+
+jobs:
+  mac-aarch64:
+    runs-on: macos-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: build
+      run: |
+          make
+    - name: check
+      run: |
+          ./pl0
+    - name: test
+      run: |
+          ./pl0 -ast example/fibonacci.pl0
+          ./pl0 -code example/fibonacci.pl0
+          ./pl0 -exec example/fibonacci.pl0
+
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: build
+      run: |
+          make
+    - name: check
+      run: |
+          ./pl0
+    - name: test
+      run: |
+          ./pl0 -ast example/fibonacci.pl0
+          ./pl0 -code example/fibonacci.pl0
+          ./pl0 -exec example/fibonacci.pl0
